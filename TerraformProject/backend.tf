@@ -1,3 +1,4 @@
+# Saves the tf changes in a S3 bucket
 terraform {
   backend "s3" {
     bucket         = "terraform-bucker"

@@ -1,8 +1,8 @@
-resource "aws_lb_target_group" "webserver-lb-target-group" {
+resource "aws_lb_target_group" "webserver_lb_target_group" {
   name     = "WebServer-TG"
   port     = "80"
   protocol = "HTTP"
-  vpc_id   = aws_vpc.webserver-vpc.id
+  vpc_id   = aws_vpc.webserver_vpc.id
 
   health_check {
       enabled             = true

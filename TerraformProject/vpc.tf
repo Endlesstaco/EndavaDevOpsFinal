@@ -1,5 +1,5 @@
 # Creates the VPC
-resource "aws_vpc" "webserver-vpc" {
+resource "aws_vpc" "webserver_vpc" {
   cidr_block       = "10.0.0.0/16"
   tags = {
     Name = "WebServer"
@@ -8,8 +8,8 @@ resource "aws_vpc" "webserver-vpc" {
 
 
 # Creates the subnet
-resource "aws_subnet" "subnet-webserver" {
-  vpc_id                  = aws_vpc.webserver-vpc.id 
+resource "aws_subnet" "subnet_webserver" {
+  vpc_id                  = aws_vpc.webserver_vpc.id 
   cidr_block              = "10.0.0.0/24"
   availability_zone       = "eu-central-1c"
   map_public_ip_on_launch = true
@@ -20,14 +20,14 @@ resource "aws_subnet" "subnet-webserver" {
 }
 
 # Creates a subnet for the ASG
-resource "aws_subnet" "subnet-webserver-asg" {
-  vpc_id                  = aws_vpc.webserver-vpc.id
+resource "aws_subnet" "subnet_webserver_asg" {
+  vpc_id                  = aws_vpc.webserver_vpc.id
   cidr_block              = "10.0.1.0/24"
   availability_zone       = "eu-central-1b"
   map_public_ip_on_launch = true
 
   tags = {
-    Name = "WebServer-ASG"
+    Name = "WebServer_ASG"
   }
 }
 
@@ -35,13 +35,13 @@ resource "aws_subnet" "subnet-webserver-asg" {
 
 # Sets a gateway
 resource "aws_internet_gateway" "gw" {
-  vpc_id        = aws_vpc.webserver-vpc.id
+  vpc_id        = aws_vpc.webserver_vpc.id
 }
 
 
 # Sets a routing table pointing to the gateway
-resource "aws_route_table" "webserver-route-table" {
-  vpc_id        = aws_vpc.webserver-vpc.id
+resource "aws_route_table" "webserver_route_table" {
+  vpc_id        = aws_vpc.webserver_vpc.id
 
   route {
      cidr_block = "0.0.0.0/0"
@@ -55,22 +55,22 @@ resource "aws_route_table" "webserver-route-table" {
 
 
 # Associates the subnets with the route table
-resource "aws_route_table_association" "webserver-route-table-association" {
-   subnet_id      = aws_subnet.subnet-webserver.id
-   route_table_id = aws_route_table.webserver-route-table.id
+resource "aws_route_table_association" "webserver_route_table_association" {
+   subnet_id      = aws_subnet.subnet_webserver.id
+   route_table_id = aws_route_table.webserver_route_table.id
 }
 
-resource "aws_route_table_association" "webserver-asg-route-table-association" {
-   subnet_id      = aws_subnet.subnet-webserver-asg.id
-   route_table_id = aws_route_table.webserver-route-table.id
+resource "aws_route_table_association" "webserver_asg_route_table_association" {
+   subnet_id      = aws_subnet.subnet_webserver_asg.id
+   route_table_id = aws_route_table.webserver_route_table.id
 }
 
 
 # Creates a Security Group
-resource "aws_security_group" "webserver-allow-http-sg" {
+resource "aws_security_group" "webserver_allow_http_sg" {
    name        = "allow_http"
    description = "Allows HTTP traffic"
-   vpc_id      = aws_vpc.webserver-vpc.id
+   vpc_id      = aws_vpc.webserver_vpc.id
 
 
 # Allows https inbound traffic
@@ -98,6 +98,16 @@ ingress {
      description = "SSH"
      from_port   = 22
      to_port     = 22
+     protocol    = "tcp"
+     cidr_blocks = ["0.0.0.0/0"]
+}
+
+# Allows Prometheus traffic 
+
+ingress { 
+     description  = "Prometheus"
+     from_port   = 9090
+     to_port     = 9090
      protocol    = "tcp"
      cidr_blocks = ["0.0.0.0/0"]
 }
