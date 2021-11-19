@@ -2,7 +2,6 @@ Terraform project
 
 Task Description:
 
-
 Create public git repository
 
 Choose a free Cloud Service Provider and register a free account with AWS, Azure, etc.
