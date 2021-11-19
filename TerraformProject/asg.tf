@@ -51,4 +51,3 @@ resource "aws_launch_template" "webserver_launch_template" {
   user_data = filebase64("~/TerraformProject/user_data.sh")
 
 }
-
