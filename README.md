@@ -1,4 +1,4 @@
-Terraform project for Endava. 
+Terraform project 
 
 Task Description:
 
